@@ -1,0 +1,112 @@
+<style>
+  .board {
+    position: relative;
+    width: 900px;
+    height: 900px;
+    margin: auto;
+    background-color: bisque;
+    border: thick double #000;
+  }
+  .back-cell {
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    display: inline-block;
+  }
+
+  .operator-board {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+  }
+
+  .cell {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+
+    text-align: center;
+    line-height: 50px;
+    font-size: 45px;
+  }
+</style>
+
+<div id="board" class="board"></div>
+
+<script>
+  let pattern = [
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  ];
+
+  let color = 1;
+
+  function showCheckerboard() {
+    const board = document.getElementById('board');
+    for(let y = 0; y < 18; y++) {
+      for (let x = 0; x < 18; x++) {
+        const checkerboardCell = document.createElement('div');
+        checkerboardCell.classList.add('back-cell');
+        board.append(checkerboardCell);
+      }
+      board.appendChild(document.createElement('br'));
+    }
+  }
+
+  function show() {
+    const board = document.getElementById('board');
+    const operatorBoard = document.createElement('div');
+    operatorBoard.classList.add('operator-board');
+    for(let y = 0; y < 17; y++) {
+      for (let x = 0; x < 17; x++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.innerHTML =
+          pattern[y * 17 + x] === 2 ? '⚫' :
+          pattern[y * 17 + x] === 1 ? '⚪' :
+          ''
+
+        cell.addEventListener('click', () => {
+          userMove(x, y);
+        })
+        
+        operatorBoard.append(cell);
+      }
+      operatorBoard.appendChild(document.createElement('br'));
+    }
+    board.appendChild(operatorBoard);
+  }
+
+  function userMove(x, y) {
+    if (pattern[y * 17 + x] !== 0) {
+      return
+    }
+
+    pattern[y * 17 + x] = color;
+
+    color = 3 - color;
+
+    show();
+  }
+
+  showCheckerboard();
+  show();
+</script>
