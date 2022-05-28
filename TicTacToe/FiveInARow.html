@@ -95,17 +95,128 @@
     board.appendChild(operatorBoard);
   }
 
+  function countPoint(x, y) {
+    return y * 17 + x;
+  }
+
   function userMove(x, y) {
-    if (pattern[y * 17 + x] !== 0) {
+    if (pattern[countPoint(x, y)] !== 0) {
       return
     }
 
-    pattern[y * 17 + x] = color;
+    pattern[countPoint(x, y)] = color;
+
+    if (check(pattern, color, x, y)) {
+      alert(`${color === 1 ? '⚪' : '⚫'} is winner!`);
+    };
 
     color = 3 - color;
 
+    if (willWin(pattern, color)) {
+      console.log(`${color === 1 ? '⚪' : '⚫'} will win!`);
+    }
+
     show();
   }
+
+  function check(pattern, color, x, y) {
+    // 水平方向 检查y这一行
+    out:for (let i = 0; i < 13; i++) {
+      for (j = 0; j < 5; j++) {
+        const row_x = i + j;
+        if (pattern[countPoint(row_x, y)] !== color) {
+          continue out;
+        }
+      }
+      return true;
+    }
+    // 垂直方向 x这一列
+    out:for (let i = 0; i < 13; i++) {
+      for (j = 0; j < 5; j++) {
+        const col_y = i + j;
+        if (pattern[countPoint(x, col_y)] !== color) {
+          continue out;
+        }
+      }
+      return true;
+    }
+    // 撇方向
+    for (let i = Math.max(4, x - 5); i < Math.min(17, x + 5); i++) {
+      out:for (j = Math.max(0, y - 5); j < Math.min(13, y + 5); j++) {
+        for (num = 0; num < 5; num ++) {
+          if (pattern[countPoint(i - num, j + num)] !== color) {
+            continue out;
+          }
+        }
+        return true;
+      }
+    }
+    // 捺方向
+    for (let i = Math.max(0, x - 5); i < Math.min(13, x + 5); i++) {
+      out:for (j = Math.max(0, y - 5); j < Math.min(13, y + 5); j++) {
+        for (num = 0; num < 5; num ++) {
+          if (pattern[countPoint(i + num, j + num)] !== color) {
+            continue out;
+          }
+        }
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function clone(pattern) {
+    return JSON.parse(JSON.stringify(pattern));
+  }
+
+  function willWin(pattern, color) {
+    for(let i = 0; i < 17; i++) {
+      for(let j = 0; j < 17; j++) {
+        if (pattern[countPoint(i, j)] !== 0) 
+          continue;
+        let tmp = clone(pattern);
+        tmp[countPoint(i, j)] = color;
+        if (check(tmp, color, i, j)) {
+          return [i, j];
+        }
+      }
+    }
+    return null;
+  }
+
+  // function bestChoice(pattern, color) {
+  //   let point = willWin(pattern, color);
+  //   if (point) {
+  //     return {
+  //       point: point,
+  //       result: 1
+  //     }
+  //   }
+
+  //   let result = -1;
+
+  //   outer:for(let i = 0; i < 5; i++) {
+  //     for(let j = 0; j < 5; j++) {
+  //       if (pattern[countPoint(i, j)] !== 0) 
+  //         continue;
+  //       let tmp = clone(pattern);
+  //       tmp[countPoint(i, j)] = color;
+  //       let opp = bestChoice(tmp, 3 - color);
+  //       if (-opp.result >= result) {
+  //         point = [i, j];
+  //         result = -opp.result;
+  //       }
+  //       if (result === 1) {
+  //         break outer;
+  //       }
+  //     }
+  //   }
+
+  //   return {
+  //     point,
+  //     result: point ? result : 0
+  //   }
+  // }
 
   showCheckerboard();
   show();
