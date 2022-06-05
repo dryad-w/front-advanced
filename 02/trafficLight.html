@@ -1,0 +1,74 @@
+<style>
+  div {
+    background-color: grey;
+    display: inline-block;
+    margin: 30px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+  }
+  .green.light {
+    background-color: green;
+  }
+  .yellow.light {
+    background-color: yellow;
+  }
+  .red.light {
+    background-color: red;
+  }
+</style>
+
+<div class="green"></div>
+<div class="yellow"></div>
+<div class="red"></div>
+<button id="next">next</button>
+
+<script>
+  const lights = document.getElementsByTagName('div');
+  function green() {
+    for(let i = 0; i < 3; i++) {
+      lights[i].classList.remove('light');
+    }
+    lights[0].classList.add('light');
+  }
+  function yellow() {
+    for(let i = 0; i < 3; i++) {
+      lights[i].classList.remove('light');
+    }
+    lights[1].classList.add('light');
+  }
+  function red() {
+    for(let i = 0; i < 3; i++) {
+      lights[i].classList.remove('light');
+    }
+    lights[2].classList.add('light');
+  }
+  function sleep(t) {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, t);
+    })
+  }
+  function happen(element, eventName) {
+    return new Promise((r) => {
+      element.addEventListener(eventName, r, {once: true});
+    })
+  }
+  async function goHappen() {
+    green();
+    await happen(document.getElementById('next'), 'click');
+    yellow();
+    await happen(document.getElementById('next'), 'click');
+    red();
+    await happen(document.getElementById('next'), 'click');
+    go();
+  }
+  async function goSleep() {
+    green();
+    await sleep(10000);
+    yellow();
+    await sleep(5000);
+    red();
+    await sleep(2000);
+    go();
+  }
+</script>
