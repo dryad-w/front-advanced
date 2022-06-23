@@ -1,0 +1,36 @@
+<script>
+  class KMP {
+    KMP(pat) {
+      this.pat = pat;
+      const M = pat.length;
+      // dp[状态][字符] = 下一个状态
+      this.dp = new Array(M).fill(new Array(256).fill(0));
+      // console.log('dp', this.dp);
+      this.dp[0][pat.charCodeAt(0)] = 1;
+      // 影子状态 X 初试为0
+      let X = 0;
+      for (let i = 0; i < M; i++) {
+        for (let j = 0; j <256; j++)
+          this.dp[i][j] = this.dp[X][j];
+        this.dp[i][pat.charCodeAt(i)] = i + 1;
+        X = this.dp[X][pat.charCodeAt(i)];
+      }
+      // console.log('dp', this.dp);
+    }
+    search(txt) {
+      const M = this.pat.length;
+      const N = txt.length;
+      let j = 0;
+      for (let i = 0; i < N; i++) {
+        j = this.dp[j][txt.charCodeAt(i)]
+        if (j === M) return i - M + 1;
+      }
+      return -1;
+    }
+  }
+
+  const kmp = new KMP();
+  kmp.KMP('abcabcabx');
+  const result = kmp.search('abcabcabcabx');
+  console.log(result);
+</script>
