@@ -13,6 +13,7 @@
         for (let j = 0; j <256; j++)
           this.dp[i][j] = this.dp[X][j];
         this.dp[i][pat.charCodeAt(i)] = i + 1;
+        // 十分重要。总是落后j的状态
         X = this.dp[X][pat.charCodeAt(i)];
       }
       // console.log('dp', this.dp);
